@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Events from "./components/Events";
 import CategorySelector from "./components/CategorySelector";
 import Search from "./components/Search";
+import Header from "./components/Header";
 import Axios from "../node_modules/axios";
 
 class App extends Component {
@@ -14,7 +15,7 @@ class App extends Component {
   render() {
     return (
       <main>
-        <h1>EVENTS</h1>
+        <Header name="Events" />
         <input
           placeholder="Enter City"
           value={this.state.search}
@@ -35,7 +36,6 @@ class App extends Component {
       search: event.target.value
     });
   };
-
   onSubmit = () => {
     this.setState({
       result: this.state.search,
@@ -45,7 +45,7 @@ class App extends Component {
 
   componentDidMount = () => {
     Axios.get(
-      `https://app.ticketmaster.com/discovery/v2/events.json?size=1&countryCode=GB&apikey=oFolx3SJL91d7LQG0WsmPzXZKIGWXwee`
+      `https://app.ticketmaster.com/discovery/v2/events.json?size=50&countryCode=GB&city=manchester&apikey=oFolx3SJL91d7LQG0WsmPzXZKIGWXwee`
     )
       .then(result => {
         //manipulate the data with a reduce into a new array of objects
@@ -54,11 +54,6 @@ class App extends Component {
         const data = [...result.data._embedded.events];
         const eventData = data.reduce((acc, val, i) => {
           // console.log(val.images[0].url, "this gets the images url");
-
-          // console.log(
-          //   val._embedded.attractions[0].name,
-          //   "this is the name its inside _embedded"
-          // );
 
           // console.log(
           //   val.classifications[0].segment.name,
@@ -75,6 +70,8 @@ class App extends Component {
           // console.log(val.priceRanges[0].min, "min price range");
 
           // console.log(val.priceRanges[0].max, "max price range");
+
+          // we sometimes get undefined on [0] so this throws an error, need a way of handling the undefineds
           acc[i] = {
             name: val.name,
             genre: val.classifications[0].segment.name,
