@@ -1,10 +1,15 @@
 import React from 'react'
 
-const CategorySelector = () => {
-    const categories = ['genre', 'title', 'venue']
+const CategorySelector = ({ onChange }) => {
+    const categories = ['genre', 'price', 'venue']
     return (
-        <select>
-            <option>Choose Category</option>
+        <select onChange={onChange}>
+
+            <option> >Choose Category</option>
+            {categories.map(category => {
+                return <option value={category}> {category} </ option >
+            })}
+
         </select>
     )
 
