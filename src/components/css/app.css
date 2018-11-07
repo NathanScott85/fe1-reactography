@@ -1,0 +1,28 @@
+body {
+  background-color: #21b2b2;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 10px;
+}
+.info {
+  text-align: center;
+}
+.header {
+  text-align: center;
+}
+.input {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
+input {
+  width: 150px;
+  height: 25px;
+}
+.selector {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}

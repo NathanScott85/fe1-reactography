@@ -1,61 +1,86 @@
-import React, { Component } from 'react';
-import Events from './components/Events'
-import CategorySelector from './components/CategorySelector'
-import Axios from '../node_modules/axios';
-import Chart from './components/Chart'
-
-
+import React, { Component } from "react";
+import Events from "./components/Events";
+import CategorySelector from "./components/CategorySelector";
+import Axios from "../node_modules/axios";
+import Chart from "./components/Chart";
+import "./components/css/app.css";
 class App extends Component {
   state = {
     events: [],
-    search: '',
-    result: '',
-    category: ''
-
-  }
+    search: "",
+    result: "",
+    category: ""
+  };
 
   render() {
     return (
       <main>
-        <h1>EVENTS</h1>
-        <input placeholder="Enter City" value={this.state.search} onChange={this.onInputChange} />
-        <button onClick={this.onSubmit} > SUBMIT </button>
-        <br />
-        <CategorySelector onChange={this.onChange} />
-        <br />
-        <Chart events={this.state.events.filter(event => event.city === this.state.result)} />
+        <div class="grid">
+          <h1 className="header">EVENTS</h1>
 
+          <div className="input">
+            <input
+              placeholder="Enter City"
+              value={this.state.search}
+              onChange={this.onInputChange}
+            />
+            <br />
+            <button onClick={this.onSubmit}> SUBMIT </button>
+          </div>
+          <div className="selector">
+            <br />
+            <CategorySelector onChange={this.onChange} />
+          </div>
+          <div>
+            <Chart
+              events={this.state.events.filter(
+                event => event.city === this.state.result
+              )}
+            />
+          </div>
+
+          <div className="info">
+            {this.state.events.length && (
+              <Events
+                events={this.state.events.filter(
+                  event => event.city === this.state.result
+                )}
+              />
+            )}
+          </div>
+        </div>
 
         {/* filter below  */}
-        {this.state.events.length && < Events events={this.state.events.filter(event => event.city === this.state.result)} />}
       </main>
-    )
+    );
   }
 
   onChange = event => {
-    console.log(event.target.value, 'here')
+    console.log(event.target.value, "here");
     this.setState({
       category: event.target.value
-    })
-
-  }
+    });
+  };
 
   onInputChange = event => {
     this.setState({
       search: event.target.value
-    })
-  }
+    });
+  };
 
   onSubmit = () => {
     this.setState({
-      result: this.state.search, search: ''
-    })
-  }
+      result: this.state.search,
+      search: ""
+    });
+  };
 
   componentDidMount = () => {
-    Axios.get(`https://app.ticketmaster.com/discovery/v2/events.json?size=200&countryCode=GB&apikey=oFolx3SJL91d7LQG0WsmPzXZKIGWXwee`)
+    Axios.get(
+      `https://app.ticketmaster.com/discovery/v2/events.json?size=200&countryCode=GB&apikey=oFolx3SJL91d7LQG0WsmPzXZKIGWXwee`
+    )
       .then(result => {
-        const data = [...result.data._embedded.events]
+        const data = [...result.data._embedded.events];
         const eventData = data.reduce((acc, val, i) => {
           acc[i] = {
             name: val.name,
@@ -63,36 +88,29 @@ class App extends Component {
             venue: val._embedded.venues[0].name,
             image: val.images[0].url,
             price: val.priceRanges === undefined ? 0 : val.priceRanges[0].min,
-            info: val.info === undefined ? 'No information available' : val.info,
+            info:
+              val.info === undefined ? "No information available" : val.info,
             dateAndTime: {
               date: val.dates.start.localDate,
-              time: val.dates.start.localTime === undefined ? 'No time available' : val.dates.start.localTime
+              time:
+                val.dates.start.localTime === undefined
+                  ? "No time available"
+                  : val.dates.start.localTime
             },
             city: val._embedded.venues[0].city.name
-          }
+          };
           return acc;
-        }, [])
+        }, []);
 
         this.setState({
           events: eventData
-        })
+        });
       })
-      .catch('failed')
-  }
-
-
-
-
-
-
-
-
+      .catch("failed");
+  };
 }
 
 export default App;
-
-
-
 
 /*
 Clean up request per Pauls suggestion
@@ -134,7 +152,3 @@ RETURNED VALUE - name, image, info, date and time, price
 
 
 */
-
-
-
-
